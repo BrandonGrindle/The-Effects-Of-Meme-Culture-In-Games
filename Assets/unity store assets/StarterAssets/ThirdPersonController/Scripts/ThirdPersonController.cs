@@ -8,6 +8,11 @@ using UnityEngine.InputSystem;
 
 namespace StarterAssets
 {
+    interface IInteractable
+    {
+        public void Interact();
+    }
+
     [RequireComponent(typeof(CharacterController))]
 #if ENABLE_INPUT_SYSTEM 
     [RequireComponent(typeof(PlayerInput))]
@@ -74,6 +79,10 @@ namespace StarterAssets
 
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
+
+
+        public Transform interactSource;
+        public float InteractRange = 250.0f;
 
         // cinemachine
         private float _cinemachineTargetYaw;
@@ -159,6 +168,7 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+            Interact();
         }
 
         private void LateUpdate()
@@ -386,6 +396,22 @@ namespace StarterAssets
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
+            }
+        }
+
+        private void Interact()
+        {
+            if (_input.interact)
+            {
+                Ray raycast = new Ray(interactSource.position, interactSource.forward);
+                if (Physics.Raycast(raycast, out RaycastHit hitInfo, InteractRange))
+                {
+                    if(hitInfo.collider.gameObject.TryGetComponent(out IInteractable obj)){
+                        obj.Interact();
+                    }
+                }
+
+                _input.interact = false;   
             }
         }
     }
