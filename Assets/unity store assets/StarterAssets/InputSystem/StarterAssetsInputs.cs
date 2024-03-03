@@ -1,3 +1,4 @@
+using System.Xml.Serialization;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -13,6 +14,8 @@ namespace StarterAssets
 		public bool jump;
 		public bool sprint;
 		public bool interact;
+		public bool Inventory;
+		public bool useItem;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -49,6 +52,16 @@ namespace StarterAssets
         {
             InteractInput(value.isPressed);
         }
+
+		public void OnOpenInv(InputValue value)
+		{
+			OpenInvInput(value.isPressed);
+		}
+
+		public void OnUseItem(InputValue value)
+		{
+			UseItemInput(value.isPressed);
+		}
 #endif
 
 
@@ -77,7 +90,17 @@ namespace StarterAssets
 			interact = newInteractState;
 		}
 
-		private void OnApplicationFocus(bool hasFocus)
+		public void OpenInvInput(bool newINVState)
+		{
+			Inventory = newINVState;
+		}
+
+        public void UseItemInput(bool newUseState)
+        {
+			useItem = newUseState;
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);
 		}

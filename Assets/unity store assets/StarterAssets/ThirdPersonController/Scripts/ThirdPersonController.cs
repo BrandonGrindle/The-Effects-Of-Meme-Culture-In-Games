@@ -1,6 +1,10 @@
-﻿ using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+using System.Collections;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 #endif
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
@@ -19,6 +23,8 @@ namespace StarterAssets
 #endif
     public class ThirdPersonController : MonoBehaviour
     {
+        public static ThirdPersonController instance;
+
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
@@ -80,9 +86,24 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+        public GameObject InventoryUI;
+        public GameObject FishingRod;
+        public GameObject Sword;
+
+        public Transform CastPoint;
+        public GameObject castBauble;
+        public float castSpeed = 10.0f;
+        private bool ReadyToCast = true;
+        private bool bobberLanded = false;
+
+        private int CurrentHeldItem = 0;
+        private GameObject currentBobber = null;
 
         public Transform interactSource;
         public float InteractRange = 250.0f;
+
+        public float cooldownTime = 2.0f;
+        public bool onCooldown = false;
 
         // cinemachine
         private float _cinemachineTargetYaw;
@@ -119,6 +140,14 @@ namespace StarterAssets
 
         private bool _hasAnimator;
 
+        IEnumerator Cooldown()
+        {
+            onCooldown = true;
+            yield return new WaitForSeconds(cooldownTime);
+            ReadyToCast = true;
+            onCooldown = false;
+        }
+
         private bool IsCurrentDeviceMouse
         {
             get
@@ -139,12 +168,14 @@ namespace StarterAssets
             {
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
             }
+
+            instance = this;
         }
 
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            
+
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
@@ -169,6 +200,8 @@ namespace StarterAssets
             GroundedCheck();
             Move();
             Interact();
+            OpenInventory();
+            UseItem();
         }
 
         private void LateUpdate()
@@ -406,13 +439,123 @@ namespace StarterAssets
                 Ray raycast = new Ray(interactSource.position, interactSource.forward);
                 if (Physics.Raycast(raycast, out RaycastHit hitInfo, InteractRange))
                 {
-                    if(hitInfo.collider.gameObject.TryGetComponent(out IInteractable obj)){
+                    if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable obj))
+                    {
                         obj.Interact();
                     }
                 }
 
-                _input.interact = false;   
+                _input.interact = false;
             }
         }
-    }
+
+        private void OpenInventory()
+        {
+            if (_input.Inventory)
+            {
+                InventoryUI.SetActive(!InventoryUI.activeSelf);
+                InventoryManager.Instance.listItems();
+                Cursor.visible = InventoryUI.activeSelf;
+                if (InventoryUI.activeSelf == true)
+                {
+                    Cursor.lockState = CursorLockMode.None;
+                }
+                else
+                {
+                    Cursor.lockState = CursorLockMode.Locked;
+                }
+                _input.Inventory = false;
+            }
+        }
+
+        public void EquipItem(int itemType)
+        {
+           
+            CurrentHeldItem = itemType;
+            switch (itemType)
+            {
+                case 0:
+                    Debug.Log("No usable Item");
+                    break;
+                case 1:
+                    //Debug.Log("Fishing Rod Equipt");
+                    FishingRod.SetActive(true);
+                    break;
+                default:
+                    Debug.Log("No usable Item");
+                    break;
+            }
+        }
+
+        private void UseItem()
+        {
+            if (_input.useItem)
+            {
+                switch(CurrentHeldItem)
+                {
+                    case 0:
+                        Debug.Log("No usable Item");
+                        break;
+                    case 1:
+                        //Debug.Log("Fishing Rod in use");
+                        if (ReadyToCast)
+                        {
+                            CastBobber();
+                        }
+                        else
+                        {
+                            reelIn();
+                        }
+                        break;
+                    default:
+                        Debug.Log("No usable Item");
+                        break;
+                }
+                
+            }
+        }
+
+        public void CastBobber()
+        {
+            ReadyToCast = false;
+            currentBobber = Instantiate(castBauble, CastPoint.position, Quaternion.identity);
+            Rigidbody rb = currentBobber.GetComponent<Rigidbody>();
+            
+            Ray raycast = new Ray(interactSource.position, interactSource.forward);
+            if (Physics.Raycast(raycast, out RaycastHit hit, 500f))
+            {
+               Vector3 forceDir = (hit.point - CastPoint.position).normalized;
+
+                Vector3 AppliedForce = forceDir * castSpeed + transform.up * 5f;
+                rb.AddForce(AppliedForce, ForceMode.Impulse);
+            }
+            else
+            {
+                rb.AddForce(transform.forward * castSpeed + transform.up * 5f, ForceMode.Impulse);
+            }
+            _input.useItem = false;
+        }
+
+        private void reelIn()
+        {
+            if (currentBobber != null)
+            {
+                Vector3 ReelLoc = (interactSource.position - currentBobber.transform.position).normalized;
+                float reelSpeed = 10f;
+                Rigidbody rb = currentBobber.GetComponent<Rigidbody>();
+
+                Vector3 AppliedForce = ReelLoc * reelSpeed;
+                rb.AddForce(AppliedForce, ForceMode.Impulse);
+
+                if (Vector3.Distance(currentBobber.transform.position, interactSource.position) < 1f) 
+                {
+                    Debug.Log("bobber destroyed");
+                    Destroy(currentBobber);
+                    currentBobber = null;
+                    StartCoroutine(Cooldown());
+                }
+            }
+        }
+
+    }       
 }

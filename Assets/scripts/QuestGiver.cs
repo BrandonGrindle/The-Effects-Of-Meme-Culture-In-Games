@@ -8,5 +8,6 @@ public class QuestGiver : MonoBehaviour, IInteractable
   public void Interact()
     {
         Debug.Log("Hello");
+
     }
 }
