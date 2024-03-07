@@ -543,13 +543,19 @@ namespace StarterAssets
                 Vector3 ReelLoc = (interactSource.position - currentBobber.transform.position).normalized;
                 float reelSpeed = 10f;
                 Rigidbody rb = currentBobber.GetComponent<Rigidbody>();
+                FishingBobble FishingScript = currentBobber.GetComponent<FishingBobble>();
 
                 Vector3 AppliedForce = ReelLoc * reelSpeed;
                 rb.AddForce(AppliedForce, ForceMode.Impulse);
 
                 if (Vector3.Distance(currentBobber.transform.position, interactSource.position) < 1f) 
                 {
-                    Debug.Log("bobber destroyed");
+
+                    //Debug.Log("bobber destroyed");
+                    if (FishingScript != null && FishingScript.NPCControl != null)
+                    {
+                        FishingScript.NPCControl.pickupItem();
+                    }
                     Destroy(currentBobber);
                     currentBobber = null;
                     StartCoroutine(Cooldown());

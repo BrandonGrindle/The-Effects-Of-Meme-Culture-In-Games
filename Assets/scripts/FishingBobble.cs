@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class FishingBobble : MonoBehaviour
 {
+    public NPCBehavior NPCControl = null;
     private void OnTriggerEnter(Collider other)
     {
         //Debug.Log("literally anything");
         if (other.CompareTag("NPC"))
         {
-            NPCBehavior NPCControl = other.GetComponentInParent<NPCBehavior>();
+            NPCControl = other.GetComponentInParent<NPCBehavior>();
             if (NPCControl != null)
             {
                 NPCControl.Captured(this.gameObject);

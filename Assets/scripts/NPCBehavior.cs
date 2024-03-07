@@ -10,7 +10,7 @@ public class NPCBehavior : MonoBehaviour
     public Animator animator;
 
 
-    void pickupItem()
+    public void pickupItem()
     {
         InventoryManager.Instance.AddItem(item);
         Destroy(gameObject);
