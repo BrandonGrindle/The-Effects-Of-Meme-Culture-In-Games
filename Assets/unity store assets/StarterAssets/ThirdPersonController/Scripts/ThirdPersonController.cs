@@ -105,6 +105,8 @@ namespace StarterAssets
         public float cooldownTime = 2.0f;
         public bool onCooldown = false;
 
+        private int layerMask;
+
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -168,7 +170,7 @@ namespace StarterAssets
             {
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
             }
-
+            layerMask = ~LayerMask.GetMask("Player");
             instance = this;
         }
 
@@ -521,8 +523,8 @@ namespace StarterAssets
             currentBobber = Instantiate(castBauble, CastPoint.position, Quaternion.identity);
             Rigidbody rb = currentBobber.GetComponent<Rigidbody>();
             
-            Ray raycast = new Ray(interactSource.position, interactSource.forward);
-            if (Physics.Raycast(raycast, out RaycastHit hit, 500f))
+            Ray raycast = new Ray(_mainCamera.transform.position, _mainCamera.transform.forward);
+            if (Physics.Raycast(raycast, out RaycastHit hit, 500f, layerMask))
             {
                Vector3 forceDir = (hit.point - CastPoint.position).normalized;
 
@@ -541,7 +543,7 @@ namespace StarterAssets
             if (currentBobber != null)
             {
                 Vector3 ReelLoc = (interactSource.position - currentBobber.transform.position).normalized;
-                float reelSpeed = 10f;
+                float reelSpeed = 5f;
                 Rigidbody rb = currentBobber.GetComponent<Rigidbody>();
                 FishingBobble FishingScript = currentBobber.GetComponent<FishingBobble>();
 
@@ -552,9 +554,12 @@ namespace StarterAssets
                 {
 
                     //Debug.Log("bobber destroyed");
-                    if (FishingScript != null && FishingScript.NPCControl != null)
+                    if (FishingScript != null && FishingScript.CaughtNCPS != null)
                     {
-                        FishingScript.NPCControl.pickupItem();
+                        foreach(NPCBehavior npc in FishingScript.CaughtNCPS)
+                        {
+                            npc.pickupItem();
+                        }
                     }
                     Destroy(currentBobber);
                     currentBobber = null;

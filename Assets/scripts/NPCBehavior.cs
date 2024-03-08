@@ -8,6 +8,7 @@ public class NPCBehavior : MonoBehaviour
     public Items item;
     public Collider MainCol;
     public Animator animator;
+    public bool captured = false;
 
 
     public void pickupItem()
@@ -19,6 +20,7 @@ public class NPCBehavior : MonoBehaviour
     public void Captured(GameObject BOBBLE)
     {
         //MainCol.enabled = false;
+        captured = true;
         animator.enabled = false;       
         
     }

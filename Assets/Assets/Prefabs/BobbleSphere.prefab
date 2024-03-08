@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 7554729221922355486}
   - component: {fileID: 3032485821421577008}
   - component: {fileID: 8821745550484643212}
-  - component: {fileID: 3312598671842862108}
   - component: {fileID: 3755776431959952833}
   - component: {fileID: -6999510949697498498}
   - component: {fileID: 6626644495919703363}
+  - component: {fileID: -2835580655484034999}
   m_Layer: 0
   m_Name: BobbleSphere
   m_TagString: Untagged
@@ -87,27 +87,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &3312598671842862108
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3380900837214725614}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &3755776431959952833
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -147,6 +126,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 162b20fd44cc7c64186ff137fdc440e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CaughtNCPS: []
+  NPCControl: {fileID: 0}
 --- !u!135 &6626644495919703363
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -167,4 +148,25 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 2
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &-2835580655484034999
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3380900837214725614}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
