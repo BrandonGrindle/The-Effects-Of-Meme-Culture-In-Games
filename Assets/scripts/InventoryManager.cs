@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.ComponentModel;
+using System.Linq;
+using static UnityEditor.Progress;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -57,4 +60,11 @@ public class InventoryManager : MonoBehaviour
             ItemController[i].addItem(items[i]);
         }
     }
+
+    public bool HasQuestItem(Items.ItemType ITEMTYPE)
+    {
+        return items.Any(item => item.itemType == ITEMTYPE);
+    }
+
+    
 }

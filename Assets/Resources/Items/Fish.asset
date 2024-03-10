@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <id>k__BackingField: Fish
   ItemName: fish
-  ItemSprite: {fileID: 0}
+  ItemSprite: {fileID: 21300000, guid: b859e36c62cefba4caf2ff14f5209e7f, type: 3}
   itemType: 0

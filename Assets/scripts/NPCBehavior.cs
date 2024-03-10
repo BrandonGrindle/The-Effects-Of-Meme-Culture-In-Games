@@ -17,9 +17,8 @@ public class NPCBehavior : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void Captured(GameObject BOBBLE)
+    public void Captured()
     {
-        //MainCol.enabled = false;
         captured = true;
         animator.enabled = false;       
         

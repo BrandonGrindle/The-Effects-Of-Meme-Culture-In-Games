@@ -69,7 +69,7 @@ public class QuestManager : MonoBehaviour
 
     private void ClaimRewards(Quests quest)
     {
-        Debug.Log("rewards gained");
+        //Debug.Log("rewards gained");
         //implement rewards.
     }
     private void ChangeQuestState(string id, QuestState State)

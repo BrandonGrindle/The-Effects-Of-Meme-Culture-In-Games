@@ -14,6 +14,10 @@ public class EventManager : MonoBehaviour
         {
             Debug.LogError("more than one event manager present");
         }
+        else
+        {
+            Debug.Log("EventManager instance was created.");
+        }
 
         Instance = this;
 

@@ -550,16 +550,28 @@ namespace StarterAssets
                 Vector3 AppliedForce = ReelLoc * reelSpeed;
                 rb.AddForce(AppliedForce, ForceMode.Impulse);
 
+                if (FishingScript.FishingSpot != null && FishingScript.FishingSpot.catchDetected)
+                {
+                    FishingScript.FishingSpot.CatchFish();
+                }
+
                 if (Vector3.Distance(currentBobber.transform.position, interactSource.position) < 1f) 
                 {
 
                     //Debug.Log("bobber destroyed");
-                    if (FishingScript != null && FishingScript.CaughtNCPS != null)
+                    if (FishingScript != null && FishingScript.CaughtNCPS.Count > 0)
                     {
+                        Debug.Log("NPC CAUGHT");
                         foreach(NPCBehavior npc in FishingScript.CaughtNCPS)
                         {
                             npc.pickupItem();
                         }
+                    }
+                    else if(FishingScript != null && FishingScript.FishingSpot != null)
+                    {
+                        Debug.Log("adding: " + FishingScript.FishingSpot.caughtFish + " to inventory");
+                        InventoryManager.Instance.AddItem(FishingScript.FishingSpot.caughtFish); ;
+                        FishingScript.FishingSpot.caughtFish = null;
                     }
                     Destroy(currentBobber);
                     currentBobber = null;

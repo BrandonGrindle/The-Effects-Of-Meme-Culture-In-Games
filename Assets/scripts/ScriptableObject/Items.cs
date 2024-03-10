@@ -20,7 +20,7 @@ public class Items : ScriptableObject
 
     public enum ItemType
     {
-        QuestItem,
+        FishingQuest,
         FishingRod,
         Sword
     }
