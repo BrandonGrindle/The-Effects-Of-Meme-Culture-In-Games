@@ -9,6 +9,7 @@ TagManager:
   - NPC
   - CollectionPoint
   - FishPoint
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - Player
   - Water
   - UI
-  - 
+  - Ground
   - 
   - 
   - 

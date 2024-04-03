@@ -21,6 +21,9 @@ public class ItemController : MonoBehaviour
                 case Items.ItemType.FishingRod:
                     ThirdPersonController.instance.EquipItem(1);
                     break;
+                case Items.ItemType.Sword:
+                    ThirdPersonController.instance.EquipItem(2);
+                    break;
 
             }
         }

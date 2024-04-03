@@ -22,6 +22,8 @@ public class Items : ScriptableObject
     {
         FishingQuest,
         FishingRod,
-        Sword
+        Sword,
+        Bow,
+        Shield
     }
 }

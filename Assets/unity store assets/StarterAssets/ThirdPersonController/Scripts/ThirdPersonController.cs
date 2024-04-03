@@ -86,6 +86,8 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+        [Header("Inventory control")]
+
         public GameObject InventoryUI;
         public GameObject FishingRod;
         public GameObject Sword;
@@ -481,7 +483,18 @@ namespace StarterAssets
                     break;
                 case 1:
                     //Debug.Log("Fishing Rod Equipt");
+                    if(Sword.activeSelf == true)
+                    {
+                        Sword.SetActive(false);
+                    }
                     FishingRod.SetActive(true);
+                    break;
+                case 2:
+                    if (FishingRod.activeSelf == true)
+                    {
+                        FishingRod.SetActive(false);
+                    }
+                    Sword.SetActive(true);
                     break;
                 default:
                     Debug.Log("No usable Item");
@@ -507,6 +520,12 @@ namespace StarterAssets
                         else
                         {
                             reelIn();
+                        }
+                        break;
+                    case 2:
+                        if (WeaponController.instance.canAttack)
+                        {
+                            WeaponController.instance.Attack();
                         }
                         break;
                     default:
