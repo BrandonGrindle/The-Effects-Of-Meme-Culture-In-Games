@@ -23,14 +23,15 @@ public class WeaponController : MonoBehaviour
         instance = this;
         layerMask = ~LayerMask.GetMask("Player");
     }
-    public void Attack() {
+    public void Attack()
+    {
         //Debug.Log("Attack attempt");
         canAttack = false;
         Ray raycast = new Ray(WeaponOrigin.transform.position, WeaponOrigin.transform.forward);
         if (Physics.Raycast(raycast, out RaycastHit hit, AttackRange, layerMask))
         {
-            //Debug.DrawLine(WeaponOrigin.transform.position, hit.point, Color.red, 10.0f);
-            //Debug.Log(hit.collider.tag);
+            Debug.DrawLine(WeaponOrigin.transform.position, hit.point, Color.red, 10.0f);
+            Debug.Log(hit.collider.tag);
             if (hit.collider.CompareTag("Enemy"))
             {
                 EnemyAI EnemyScript = hit.collider.gameObject.GetComponentInParent<EnemyAI>();

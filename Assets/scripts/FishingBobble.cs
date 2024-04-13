@@ -11,7 +11,7 @@ public class FishingBobble : MonoBehaviour
 
     public void Update()
     {
-        
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -19,7 +19,6 @@ public class FishingBobble : MonoBehaviour
         //Debug.Log("literally anything");
         if (other.CompareTag("NPC"))
         {
-            Debug.Log("Triger Entered");
             NPCControl = other.GetComponentInParent<NPCBehavior>();
             if (NPCControl != null && NPCControl.captured == false)
             {

@@ -12,7 +12,7 @@ public class Quests
     public Quests(QuestInfo Quest)
     {
         this.QuestData = Quest;
-        this.currentProgression = QuestState.CAN_START;
+        this.currentProgression = QuestState.REQUIREMENTS_NOT_MET;
         this.QuestStepIndex = 0;
 
     }
@@ -40,7 +40,7 @@ public class Quests
     private GameObject GetCurrentQuestStepPrefab()
     {
         GameObject questStepprefab = null;
-        if( ValidCurrentStep() )
+        if (ValidCurrentStep())
         {
             questStepprefab = QuestData.steps[QuestStepIndex];
         }

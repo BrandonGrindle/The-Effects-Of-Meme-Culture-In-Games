@@ -8,6 +8,7 @@ public class UiControl : MonoBehaviour
     public void CloseInv()
     {
         Inventory.SetActive(false);
+        InventoryManager.Instance.ClearList();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }

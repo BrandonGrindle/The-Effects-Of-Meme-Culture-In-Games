@@ -21,6 +21,7 @@ public class Items : ScriptableObject
     public enum ItemType
     {
         FishingQuest,
+        CombatQuest,
         FishingRod,
         Sword,
         Bow,

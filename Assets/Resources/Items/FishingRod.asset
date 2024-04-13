@@ -15,4 +15,4 @@ MonoBehaviour:
   <id>k__BackingField: FishingRod
   ItemName: Fishing Rod
   ItemSprite: {fileID: 21300000, guid: 2f2039c79b931984e93f2a6344a01459, type: 3}
-  itemType: 1
+  itemType: 2

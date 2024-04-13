@@ -15,4 +15,4 @@ MonoBehaviour:
   <id>k__BackingField: Sword
   ItemName: Sword
   ItemSprite: {fileID: 21300000, guid: 836836bea83c81941bbc1bc1fee5569c, type: 3}
-  itemType: 2
+  itemType: 3

@@ -26,6 +26,12 @@ namespace StarterAssets
         public static ThirdPersonController instance;
 
         [Header("Player")]
+        [Tooltip("Player Health")]
+        [SerializeField] private float PlayerHealth = 20.0f;
+        float FullHealth;
+        [Tooltip("Defense")]
+        [SerializeField] private float Defense = 10.0f;
+        [Space(10)]
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
 
@@ -96,7 +102,7 @@ namespace StarterAssets
         public GameObject castBauble;
         public float castSpeed = 10.0f;
         private bool ReadyToCast = true;
-        private bool bobberLanded = false;
+        private Coroutine BobberReturnRoutine;
 
         private int CurrentHeldItem = 0;
         private GameObject currentBobber = null;
@@ -105,9 +111,14 @@ namespace StarterAssets
         public float InteractRange = 250.0f;
 
         public float cooldownTime = 2.0f;
+        [SerializeField] private float ReturnTime = 20.0f;
         public bool onCooldown = false;
 
         private int layerMask;
+
+        private bool returning = false;
+
+        private Transform SpawnPoint;
 
         // cinemachine
         private float _cinemachineTargetYaw;
@@ -152,6 +163,18 @@ namespace StarterAssets
             onCooldown = false;
         }
 
+        IEnumerator BobberReturn()
+        {
+            returning = true;
+            //Debug.Log("return coroutine started");
+            yield return new WaitForSeconds(ReturnTime);
+            Debug.Log("return coroutine Executed");
+            returning = false;
+            Destroy(currentBobber);
+            currentBobber = null;
+            StartCoroutine(Cooldown());
+        }
+
         private bool IsCurrentDeviceMouse
         {
             get
@@ -174,6 +197,9 @@ namespace StarterAssets
             }
             layerMask = ~LayerMask.GetMask("Player");
             instance = this;
+
+            SpawnPoint = GameObject.Find("SpawnPoint").transform;
+            FullHealth = PlayerHealth;
         }
 
         private void Start()
@@ -458,14 +484,15 @@ namespace StarterAssets
             if (_input.Inventory)
             {
                 InventoryUI.SetActive(!InventoryUI.activeSelf);
-                InventoryManager.Instance.listItems();
                 Cursor.visible = InventoryUI.activeSelf;
                 if (InventoryUI.activeSelf == true)
                 {
+                    InventoryManager.Instance.listItems();
                     Cursor.lockState = CursorLockMode.None;
                 }
                 else
                 {
+                    InventoryManager.Instance.ClearList();
                     Cursor.lockState = CursorLockMode.Locked;
                 }
                 _input.Inventory = false;
@@ -474,7 +501,7 @@ namespace StarterAssets
 
         public void EquipItem(int itemType)
         {
-           
+
             CurrentHeldItem = itemType;
             switch (itemType)
             {
@@ -483,18 +510,18 @@ namespace StarterAssets
                     break;
                 case 1:
                     //Debug.Log("Fishing Rod Equipt");
-                    if(Sword.activeSelf == true)
+                    if (Sword.activeSelf == true)
                     {
                         Sword.SetActive(false);
                     }
-                    FishingRod.SetActive(true);
+                    FishingRod.SetActive(!FishingRod.activeSelf);
                     break;
                 case 2:
                     if (FishingRod.activeSelf == true)
                     {
                         FishingRod.SetActive(false);
                     }
-                    Sword.SetActive(true);
+                    Sword.SetActive(!Sword.activeSelf);
                     break;
                 default:
                     Debug.Log("No usable Item");
@@ -506,7 +533,7 @@ namespace StarterAssets
         {
             if (_input.useItem)
             {
-                switch(CurrentHeldItem)
+                switch (CurrentHeldItem)
                 {
                     case 0:
                         Debug.Log("No usable Item");
@@ -532,7 +559,7 @@ namespace StarterAssets
                         Debug.Log("No usable Item");
                         break;
                 }
-                
+
             }
         }
 
@@ -541,11 +568,11 @@ namespace StarterAssets
             ReadyToCast = false;
             currentBobber = Instantiate(castBauble, CastPoint.position, Quaternion.identity);
             Rigidbody rb = currentBobber.GetComponent<Rigidbody>();
-            
+
             Ray raycast = new Ray(_mainCamera.transform.position, _mainCamera.transform.forward);
             if (Physics.Raycast(raycast, out RaycastHit hit, 500f, layerMask))
             {
-               Vector3 forceDir = (hit.point - CastPoint.position).normalized;
+                Vector3 forceDir = (hit.point - CastPoint.position).normalized;
 
                 Vector3 AppliedForce = forceDir * castSpeed + transform.up * 5f;
                 rb.AddForce(AppliedForce, ForceMode.Impulse);
@@ -561,6 +588,8 @@ namespace StarterAssets
         {
             if (currentBobber != null)
             {
+                if (!returning) { BobberReturnRoutine = StartCoroutine(BobberReturn()); }
+
                 Vector3 ReelLoc = (interactSource.position - currentBobber.transform.position).normalized;
                 float reelSpeed = 5f;
                 Rigidbody rb = currentBobber.GetComponent<Rigidbody>();
@@ -574,23 +603,35 @@ namespace StarterAssets
                     FishingScript.FishingSpot.CatchFish();
                 }
 
-                if (Vector3.Distance(currentBobber.transform.position, interactSource.position) < 1f) 
+                if (Vector3.Distance(currentBobber.transform.position, interactSource.position) < 1f)
                 {
-
+                    if (BobberReturnRoutine != null)
+                    {
+                        //Debug.Log("Routine stopped");
+                        StopCoroutine(BobberReturnRoutine);
+                        BobberReturnRoutine = null;
+                        returning = false;
+                    }
                     //Debug.Log("bobber destroyed");
                     if (FishingScript != null && FishingScript.CaughtNCPS.Count > 0)
                     {
-                        Debug.Log("NPC CAUGHT");
-                        foreach(NPCBehavior npc in FishingScript.CaughtNCPS)
+
+                        //Debug.Log("NPC CAUGHT");
+                        foreach (NPCBehavior npc in FishingScript.CaughtNCPS)
                         {
+                            EventManager.Instance.cstmevents.FishCollected();
                             npc.pickupItem();
                         }
                     }
-                    else if(FishingScript != null && FishingScript.FishingSpot != null)
+                    else if (FishingScript != null && FishingScript.FishingSpot != null)
                     {
-                        Debug.Log("adding: " + FishingScript.FishingSpot.caughtFish + " to inventory");
-                        InventoryManager.Instance.AddItem(FishingScript.FishingSpot.caughtFish); ;
-                        FishingScript.FishingSpot.caughtFish = null;
+                        if(FishingScript.FishingSpot.caughtFish != null)
+                        {
+                            //Debug.Log("adding: " + FishingScript.FishingSpot.caughtFish + " to inventory");
+                            EventManager.Instance.cstmevents.FishCollected();
+                            InventoryManager.Instance.AddItem(FishingScript.FishingSpot.caughtFish); ;
+                            FishingScript.FishingSpot.caughtFish = null;
+                        }   
                     }
                     Destroy(currentBobber);
                     currentBobber = null;
@@ -599,5 +640,27 @@ namespace StarterAssets
             }
         }
 
-    }       
+        public void PlayerDamaged(float DMGVal)
+        {
+            PlayerHealth -= DMGVal / Defense;
+
+            if (PlayerHealth <= 0)
+            {
+                Debug.Log("Player Dead");
+                PlayerHealth = FullHealth;
+                transform.position = SpawnPoint.position;
+                if (InventoryManager.Instance.HasQuestItem(Items.ItemType.CombatQuest))
+                {
+                    foreach (Items item in InventoryManager.Instance.items)
+                    {
+                        if (item.itemType == Items.ItemType.CombatQuest)
+                        {
+                            InventoryManager.Instance.RemoveItem(item);
+                        }
+                    }
+                }
+
+            }
+        }
+    }
 }

@@ -5,28 +5,27 @@ using UnityEngine;
 public class FishQuestStep : QuestStep
 {
     private int fishCollected = 0;
-    private int CompletionCount = 5;
+    private int CompletionCount = 3;
 
     private void OnEnable()
     {
-        //write fish collectin condition here
+        EventManager.Instance.cstmevents.onFishCollected += FishCollected;
     }
 
-
-    private void OnDisable() 
-    { 
-        //write disable condition here
-    } 
+    private void OnDisable()
+    {
+        EventManager.Instance.cstmevents.onFishCollected -= FishCollected;
+    }
 
     private void FishCollected()
     {
-        if (fishCollected < CompletionCount) 
+        if (fishCollected < CompletionCount)
         {
             fishCollected++;
         }
 
-        if (fishCollected >= CompletionCount) 
-        { 
+        if (fishCollected >= CompletionCount)
+        {
             FinishStep();
         }
     }

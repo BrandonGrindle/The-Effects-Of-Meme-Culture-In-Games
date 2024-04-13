@@ -9,8 +9,6 @@ public class QuestManager : MonoBehaviour
     private void Awake()
     {
         questMap = CreatequestMap();
-
-        Quests quest = GetQuestsbyId("FishQuest");
     }
 
     private void OnEnable()
@@ -24,20 +22,20 @@ public class QuestManager : MonoBehaviour
 
     private void Start()
     {
-        foreach(Quests quests in questMap.Values) 
+        foreach (Quests quests in questMap.Values)
         {
             EventManager.Instance.questEvents.QuestStateChange(quests);
         }
     }
 
-    private void OnDisable() 
+    private void OnDisable()
     {
         EventManager.Instance.questEvents.onQuestStart -= StartQuest;
         EventManager.Instance.questEvents.onQuestProgressed -= AdvanceQuest;
         EventManager.Instance.questEvents.onQuestComplete -= CompleteQuest;
     }
 
-    private void StartQuest(string id) 
+    private void StartQuest(string id)
     {
         Quests quest = GetQuestsbyId(id);
         quest.InstantiateQuestStep(this.transform);
@@ -56,7 +54,7 @@ public class QuestManager : MonoBehaviour
         }
         else
         {
-            ChangeQuestState(quest.QuestData.id, QuestState.COMPLETE);     
+            ChangeQuestState(quest.QuestData.id, QuestState.COMPLETE);
         }
     }
 
@@ -84,8 +82,9 @@ public class QuestManager : MonoBehaviour
     {
         bool requirements = true;
 
-        foreach (QuestInfo quest in quests.QuestData.questPreReq) {
-            if (GetQuestsbyId(quest.id).currentProgression != QuestState.COMPLETE)
+        foreach (QuestInfo quest in quests.QuestData.questPreReq)
+        {
+            if (GetQuestsbyId(quest.id).currentProgression != QuestState.SUBMITTED)
             {
                 requirements = false;
             }
@@ -98,7 +97,7 @@ public class QuestManager : MonoBehaviour
     {
         foreach (Quests quest in questMap.Values)
         {
-            if(quest.currentProgression == QuestState.REQUIREMENTS_NOT_MET && requirementsCheck(quest))
+            if (quest.currentProgression == QuestState.REQUIREMENTS_NOT_MET && requirementsCheck(quest))
             {
                 ChangeQuestState(quest.QuestData.id, QuestState.CAN_START);
             }

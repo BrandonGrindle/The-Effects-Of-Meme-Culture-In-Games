@@ -15,13 +15,12 @@ public class QuestGiver : MonoBehaviour, IInteractable
     [Header("UI QUEST")]
     [SerializeField] private GameObject QuestUI;
 
-    [Header("Total Fish To Catch")]
-    [SerializeField] private int TotalToCatch = 3;
+    [Header("Quest Item Type")]
+    [SerializeField] private Items KeyItem;
+    [SerializeField] private ItemType Type;
 
     private string QuestID;
     private QuestState currentQuestState;
-
-    public int FishCollected = 0;
 
     private QuestIcons icons;
     private void Awake()
@@ -39,55 +38,58 @@ public class QuestGiver : MonoBehaviour, IInteractable
         EventManager.Instance.questEvents.onQuestStateChange -= QuestStateChange;
     }
 
-    private void Update()
-    {
-        if(FishCollected >= TotalToCatch && currentQuestState == QuestState.IN_PROGRESS)
-        {
-            
-            EventManager.Instance.questEvents.ProgressQuest(QuestID);
-        }
-    }
-    private void QuestStateChange(Quests quests) 
+    private void QuestStateChange(Quests quests)
     {
         if (quests.QuestData.id.Equals(QuestID))
         {
             currentQuestState = quests.currentProgression;
             icons.SetState(currentQuestState);
-            Debug.Log("Quest with id: " +  QuestID + " updated to state " + currentQuestState);
+            Debug.Log("Quest with id: " + QuestID + " updated to state " + currentQuestState);
         }
     }
 
     public void ItemSubmissionCheck()
     {
         //Debug.Log("item submission detected");
-        if (InventoryManager.Instance.HasQuestItem(ItemType.FishingQuest))
+        if (InventoryManager.Instance.HasQuestItem(Type))
         {
-            foreach(Items item in InventoryManager.Instance.items)
+            foreach (Items item in InventoryManager.Instance.items)
             {
-                if (item.itemType == ItemType.FishingQuest)
+                if (item.itemType == Type)
                 {
                     InventoryManager.Instance.RemoveItem(item);
-                    FishCollected++;
                 }
             }
         }
     }
+
+    public void UIupdate()
+    {
+        //implement a ui update for fish submitted
+    }
+
     public void Interact()
     {
         //Debug.Log("Hello");
         if (currentQuestState.Equals(QuestState.CAN_START))
         {
+            if (KeyItem != null)
+            {
+                InventoryManager.Instance.AddItem(KeyItem);
+            }
             EventManager.Instance.questEvents.StartQuest(QuestID);
         }
         else if (currentQuestState.Equals(QuestState.COMPLETE))
         {
             EventManager.Instance.questEvents.QuestComplete(QuestID);
+            ItemSubmissionCheck();
         }
         else
         {
             ItemSubmissionCheck();
+            UIupdate();
         }
-        
-        
+
+
     }
 }

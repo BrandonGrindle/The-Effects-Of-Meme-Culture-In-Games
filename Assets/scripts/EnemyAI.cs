@@ -1,3 +1,4 @@
+using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -12,7 +13,7 @@ public class EnemyAI : MonoBehaviour
 
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private Transform player;
-    [SerializeField] private LayerMask WhatIsGround,WhatIsPlayer;
+    [SerializeField] private LayerMask WhatIsGround, WhatIsPlayer;
 
     [SerializeField] private Vector3 walkPoint;
     bool walkpointSet;
@@ -24,6 +25,8 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private int attackDelay;
     bool alreadyAttacked;
 
+
+    [SerializeField] private Items ItemDrop;
     private void Awake()
     {
         player = GameObject.Find("PlayerArmature").transform;
@@ -35,7 +38,7 @@ public class EnemyAI : MonoBehaviour
         InSightRange = Physics.CheckSphere(transform.position, SightRange, WhatIsPlayer);
         InAttackRange = Physics.CheckSphere(transform.position, AttackRange, WhatIsPlayer);
 
-        if(!InSightRange && !InAttackRange) { patrol(); }
+        if (!InSightRange && !InAttackRange) { patrol(); }
         if (InSightRange && !InAttackRange) { chase(); }
         if (InSightRange && InAttackRange) { Attack(); }
     }
@@ -44,41 +47,49 @@ public class EnemyAI : MonoBehaviour
     {
         health -= (damage / defense);
 
-        if(health <= 0)
+        if (health <= 0)
         {
+            EventManager.Instance.cstmevents.SkeletonKilled();
+            InventoryManager.Instance.AddItem(ItemDrop);
             Destroy(this.gameObject);
         }
     }
 
     private void patrol()
     {
-        if(!walkpointSet) { SearchWalkPoint();  }
+        if (!walkpointSet) { SearchWalkPoint(); }
 
-        if(walkpointSet) {
-            Debug.Log(" walk point set");
+        if (walkpointSet)
+        {
+            //Debug.Log(" walk point set");
             agent.SetDestination(walkPoint);
         }
 
-        Vector3 disttoWP = transform.position - walkPoint; 
+        Vector3 disttoWP = transform.position - walkPoint;
 
-        if(disttoWP.magnitude < 1f)
+        if (disttoWP.magnitude < 1f)
         {
             walkpointSet = false;
-        } 
+        }
     }
 
     private void SearchWalkPoint()
     {
         float randomZ = Random.Range(-walkrange, walkrange);
         float randomX = Random.Range(-walkrange, walkrange);
+        NavMeshHit hit;
 
-        walkPoint = new Vector3(transform.position.x + randomX,transform.position.y,transform.position.z + randomZ);
+        Vector3 randomPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
 
-        if(Physics.Raycast(walkPoint, -transform.up, 2f, WhatIsGround))
+        if (NavMesh.SamplePosition(randomPoint, out hit, walkrange, NavMesh.AllAreas))
         {
+            walkPoint = hit.position;
             walkpointSet = true;
+            return;
         }
     }
+
+
 
     private void chase()
     {
@@ -93,7 +104,7 @@ public class EnemyAI : MonoBehaviour
 
         if (!alreadyAttacked)
         {
-
+            ThirdPersonController.instance.PlayerDamaged(Damage);
 
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), attackDelay);

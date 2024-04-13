@@ -1052,7 +1052,8 @@ MonoBehaviour:
   AttackRange: 1
   InAttackRange: 0
   InSightRange: 0
-  attackDelay: 10
+  attackDelay: 1
+  ItemDrop: {fileID: 11400000, guid: 1ce4b9dc44a13af489b04c2072497ada, type: 2}
 --- !u!195 &-4012310782191304460
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1073,7 +1074,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 0
-  m_WalkableMask: 4294967295
+  m_WalkableMask: 8
   m_ObstacleAvoidanceType: 4
 --- !u!1 &6555320262714340208
 GameObject:
