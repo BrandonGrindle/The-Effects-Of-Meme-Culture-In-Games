@@ -143,6 +143,11 @@ namespace StarterAssets
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
 
+        private int _animIDCast;
+        private int _animIDFishingIdle;
+        private int _animIDSwordIdle;
+        private int _animIDSwordSwing;
+
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
 #endif
@@ -246,7 +251,11 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
-        }
+            _animIDCast = Animator.StringToHash("Cast");
+            _animIDFishingIdle = Animator.StringToHash("RodEquipt");
+            _animIDSwordIdle = Animator.StringToHash("SwordEquipt");
+            _animIDSwordSwing = Animator.StringToHash("SwordAttack");
+    }
 
         private void GroundedCheck()
         {
@@ -513,15 +522,19 @@ namespace StarterAssets
                     if (Sword.activeSelf == true)
                     {
                         Sword.SetActive(false);
+                        _animator.SetBool(_animIDSwordIdle, false);
                     }
                     FishingRod.SetActive(!FishingRod.activeSelf);
+                    _animator.SetBool(_animIDFishingIdle, FishingRod.activeSelf);
                     break;
                 case 2:
                     if (FishingRod.activeSelf == true)
                     {
                         FishingRod.SetActive(false);
+                        _animator.SetBool(_animIDFishingIdle, false);
                     }
                     Sword.SetActive(!Sword.activeSelf);
+                    _animator.SetBool(_animIDSwordIdle, Sword.activeSelf);
                     break;
                 default:
                     Debug.Log("No usable Item");
@@ -542,6 +555,7 @@ namespace StarterAssets
                         //Debug.Log("Fishing Rod in use");
                         if (ReadyToCast)
                         {
+
                             CastBobber();
                         }
                         else
@@ -552,7 +566,7 @@ namespace StarterAssets
                     case 2:
                         if (WeaponController.instance.canAttack)
                         {
-                            WeaponController.instance.Attack();
+                            WeaponController.instance.Attack(_animator, _animIDSwordSwing);
                         }
                         break;
                     default:
@@ -566,6 +580,7 @@ namespace StarterAssets
         public void CastBobber()
         {
             ReadyToCast = false;
+            _animator.SetBool(_animIDCast, true);
             currentBobber = Instantiate(castBauble, CastPoint.position, Quaternion.identity);
             Rigidbody rb = currentBobber.GetComponent<Rigidbody>();
 
@@ -605,6 +620,8 @@ namespace StarterAssets
 
                 if (Vector3.Distance(currentBobber.transform.position, interactSource.position) < 1f)
                 {
+
+
                     if (BobberReturnRoutine != null)
                     {
                         //Debug.Log("Routine stopped");

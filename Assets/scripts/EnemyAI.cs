@@ -25,12 +25,23 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private int attackDelay;
     bool alreadyAttacked;
 
-
     [SerializeField] private Items ItemDrop;
+
+    private Animator animator;
+    private int _animIDAttack;
+    private int _animIDDamaged;
+    private int _animIDDeath;
+    private int _animIDrun;
     private void Awake()
     {
         player = GameObject.Find("PlayerArmature").transform;
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
+
+        _animIDAttack = Animator.StringToHash("Attack");
+        _animIDDamaged = Animator.StringToHash("Damaged");
+        _animIDDeath = Animator.StringToHash("Dead");
+        _animIDrun = Animator.StringToHash("run");
     }
 
     private void Update()
@@ -46,9 +57,10 @@ public class EnemyAI : MonoBehaviour
     public void DamageTaken(int damage)
     {
         health -= (damage / defense);
-
+        animator.SetBool(_animIDDamaged, true);
         if (health <= 0)
         {
+            animator.SetBool(_animIDDeath, true);
             EventManager.Instance.cstmevents.SkeletonKilled();
             InventoryManager.Instance.AddItem(ItemDrop);
             Destroy(this.gameObject);
@@ -63,13 +75,21 @@ public class EnemyAI : MonoBehaviour
         {
             //Debug.Log(" walk point set");
             agent.SetDestination(walkPoint);
+
+            Vector3 disttoWP = transform.position - walkPoint;
+            if (agent.pathStatus == NavMeshPathStatus.PathInvalid || agent.pathStatus == NavMeshPathStatus.PathPartial)
+            {
+                walkpointSet = false;
+            }
+            else if (disttoWP.magnitude < 1f)
+            {
+                walkpointSet = false;
+            }
+            animator.SetFloat(_animIDrun, agent.velocity.magnitude);
         }
-
-        Vector3 disttoWP = transform.position - walkPoint;
-
-        if (disttoWP.magnitude < 1f)
+        else
         {
-            walkpointSet = false;
+            animator.SetFloat(_animIDrun, 0f);
         }
     }
 
@@ -105,7 +125,7 @@ public class EnemyAI : MonoBehaviour
         if (!alreadyAttacked)
         {
             ThirdPersonController.instance.PlayerDamaged(Damage);
-
+            animator.SetBool(_animIDAttack, true);
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), attackDelay);
         }

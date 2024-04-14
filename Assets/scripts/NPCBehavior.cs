@@ -9,6 +9,7 @@ public class NPCBehavior : MonoBehaviour
     public Items item;
     public Collider MainCol;
     public Animator animator;
+    public int SpeedID;
     public bool captured = false;
 
     [SerializeField] private NavMeshAgent agent;
@@ -18,9 +19,18 @@ public class NPCBehavior : MonoBehaviour
     [SerializeField] private float walkrange;
     [SerializeField] private LayerMask WhatIsGround;
 
+    private List<Rigidbody> RagdollArtefact = new List<Rigidbody>();
+
     private void Awake()
     {
+
+        RagdollArtefact.AddRange(GetComponentsInChildren<Rigidbody>());
+
+        animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+
+        SpeedID = Animator.StringToHash("MoveSpeed");
+
     }
 
     private void Update()
@@ -37,7 +47,8 @@ public class NPCBehavior : MonoBehaviour
     public void Captured()
     {
         captured = true;
-        animator.enabled = false;
+        SetRagdollState(true);
+        //animator.enabled = false;
 
     }
 
@@ -49,13 +60,22 @@ public class NPCBehavior : MonoBehaviour
         {
             //Debug.Log(" walk point set");
             agent.SetDestination(walkPoint);
+
+            Vector3 disttoWP = transform.position - walkPoint;
+            if (agent.pathStatus == NavMeshPathStatus.PathInvalid || agent.pathStatus == NavMeshPathStatus.PathPartial)
+            {
+                walkpointSet = false;
+            }
+            else if (disttoWP.magnitude < 1f)
+            {
+                walkpointSet = false;
+            }
+
+            animator.SetFloat(SpeedID, agent.velocity.magnitude);
         }
-
-        Vector3 disttoWP = transform.position - walkPoint;
-
-        if (disttoWP.magnitude < 1f)
+        else
         {
-            walkpointSet = false;
+            animator.SetFloat(SpeedID, 0f);
         }
     }
 
@@ -84,5 +104,20 @@ public class NPCBehavior : MonoBehaviour
 
             attempts--; // Decrement the number of attempts left
         }
+    }
+
+    private void SetRagdollState(bool state)
+    {
+        foreach (var rb in RagdollArtefact)
+        {
+            rb.isKinematic = !state; // If ragdoll is on, isKinematic is off, and vice versa
+        }
+
+        // Toggle the animator and agent according to the state
+        if (animator != null) animator.enabled = !state;
+        if (agent != null) agent.enabled = !state;
+
+        // If the NPC has a parent Rigidbody, you may want to toggle isKinematic on that, too
+        if (GetComponent<Rigidbody>() != null) GetComponent<Rigidbody>().isKinematic = !state;
     }
 }
