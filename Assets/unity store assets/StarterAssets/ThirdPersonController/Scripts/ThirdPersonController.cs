@@ -653,7 +653,7 @@ namespace StarterAssets
         {
             ReadyToCast = false;
             _animator.SetBool(_animIDCast, true);
-            StartCoroutine(DelayedCast(2.5f));
+            StartCoroutine(DelayedCast(2.1f));
         }
 
         private void reelIn()
