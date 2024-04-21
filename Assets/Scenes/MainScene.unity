@@ -27873,6 +27873,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9158698548310618597, guid: 762f4af1dbc603b4aa327c4bb0a18b4d, type: 3}
+      propertyPath: MinDistance
+      value: 0.79808044
+      objectReference: {fileID: 0}
+    - target: {fileID: 9158698548310618597, guid: 762f4af1dbc603b4aa327c4bb0a18b4d, type: 3}
       propertyPath: m_audioClip
       value: 
       objectReference: {fileID: 0}
@@ -27961,6 +27965,10 @@ PrefabInstance:
       propertyPath: Sword
       value: 
       objectReference: {fileID: 1212096151}
+    - target: {fileID: 1186133405911432997, guid: ac8ba7e7b8b0cae4f93a8fc307a8c508, type: 3}
+      propertyPath: reelit
+      value: 
+      objectReference: {fileID: 8300000, guid: 36986817b7317864f8b0f96ac28dafd2, type: 3}
     - target: {fileID: 1186133405911432997, guid: ac8ba7e7b8b0cae4f93a8fc307a8c508, type: 3}
       propertyPath: Castflip
       value: 

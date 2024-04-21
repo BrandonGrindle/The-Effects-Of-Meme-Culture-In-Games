@@ -23,6 +23,8 @@ public class FishPoint : MonoBehaviour
     private GameObject exclamationPointInstance;
     public bool catchDetected = false;
 
+    public AudioClip drop;
+
     public void Awake()
     {
         UiCatch = GameObject.Find("CatchAlert");
@@ -57,6 +59,7 @@ public class FishPoint : MonoBehaviour
         yield return new WaitForSeconds(Random.Range(WaitMin, WaitMax));
 
         Vector3 pos = Bobble.transform.position + new Vector3(0, 1, 0);
+        AudioSource.PlayClipAtPoint(drop, pos, 1);
         exclamationPointInstance = Instantiate(exclamationPoint, pos, Quaternion.identity);
         
         catchDetected = true;

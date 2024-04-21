@@ -255,4 +255,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 718f7f874f4a3b943903ba76210b1d73, type: 2}
   - {fileID: 11400000, guid: 10de5a744191ed04ca68f7551c75b5cc, type: 2}
   - {fileID: 11400000, guid: b435915188a750e4cad102761b8368e9, type: 2}
+  caughtFish: {fileID: 0}
   catchDetected: 0
+  drop: {fileID: 8300000, guid: 05469b48428d13b48970d8157912cf08, type: 3}

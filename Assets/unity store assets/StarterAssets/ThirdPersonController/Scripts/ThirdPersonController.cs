@@ -178,6 +178,7 @@ namespace StarterAssets
         public AudioClip deathgrunt;
         public AudioClip Castflip;
         public AudioClip swordswing;
+        public AudioClip reelit;
         IEnumerator Cooldown()
         {
             onCooldown = true;
@@ -674,7 +675,7 @@ namespace StarterAssets
             if (currentBobber != null)
             {
                 if (!returning) { BobberReturnRoutine = StartCoroutine(BobberReturn()); }
-
+                AudioSource.PlayClipAtPoint(Castflip, _controller.center, 1);
                 Vector3 ReelLoc = (interactSource.position - currentBobber.transform.position).normalized;
                 float reelSpeed = 5f;
                 Rigidbody rb = currentBobber.GetComponent<Rigidbody>();
