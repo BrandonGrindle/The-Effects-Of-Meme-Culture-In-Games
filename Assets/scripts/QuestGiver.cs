@@ -35,14 +35,7 @@ public class QuestGiver : MonoBehaviour, IInteractable
         icons = GetComponentInChildren<QuestIcons>();
         questInfo = GameObject.Find("Info").GetComponent<TextMeshProUGUI>();
         progress = GameObject.Find("Progress").GetComponent<TextMeshProUGUI>();
-        foreach(GameObject step in CurrentQuest.steps)
-        {
-            QuestStep currstep = step.GetComponent<QuestStep>();
-            if (currstep != null)
-            {
-                questInfo.text = currstep.GetDetails();
-            }
-        }
+        questInfo.text = string.Empty; progress.text = string.Empty;
     }
 
     private void OnEnable()
@@ -87,6 +80,15 @@ public class QuestGiver : MonoBehaviour, IInteractable
             if (KeyItem != null)
             {
                 InventoryManager.Instance.AddItem(KeyItem);
+                EventManager.Instance.cstmevents.Dance();
+                foreach (GameObject step in CurrentQuest.steps)
+                {
+                    QuestStep currstep = step.GetComponent<QuestStep>();
+                    if (currstep != null)
+                    {
+                        questInfo.text = currstep.GetDetails();
+                    }
+                }
             }
             EventManager.Instance.questEvents.StartQuest(QuestID);
         }

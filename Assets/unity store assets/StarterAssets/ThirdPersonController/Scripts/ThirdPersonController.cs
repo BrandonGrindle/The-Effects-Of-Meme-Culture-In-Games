@@ -149,6 +149,7 @@ namespace StarterAssets
         private int _animIDFishingIdle;
         private int _animIDSwordIdle;
         private int _animIDSwordSwing;
+        private int _animIDDeath;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -168,6 +169,8 @@ namespace StarterAssets
 
         public Sprite rodSprite;
         public Sprite swordSprite;
+
+        private bool isAlive = true;
         IEnumerator Cooldown()
         {
             onCooldown = true;
@@ -188,6 +191,37 @@ namespace StarterAssets
             StartCoroutine(Cooldown());
         }
 
+        IEnumerator DelayedCast(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            currentBobber = Instantiate(castBauble, CastPoint.position, Quaternion.identity);
+            Rigidbody rb = currentBobber.GetComponent<Rigidbody>();
+
+            Ray raycast = new Ray(_mainCamera.transform.position, _mainCamera.transform.forward);
+            if (Physics.Raycast(raycast, out RaycastHit hit, 500f, layerMask))
+            {
+                Vector3 forceDir = (hit.point - CastPoint.position).normalized;
+
+                Vector3 AppliedForce = forceDir * castSpeed + transform.up * 5f;
+                rb.AddForce(AppliedForce, ForceMode.Impulse);
+            }
+            else
+            {
+                rb.AddForce(transform.forward * castSpeed + transform.up * 5f, ForceMode.Impulse);
+            }
+            _input.useItem = false;
+
+        }
+
+        IEnumerator DelayAD(float delay)
+        {
+            yield return new WaitForSeconds(delay); 
+            transform.position = SpawnPoint.position;
+            isAlive = true;
+            PlayerHealth = FullHealth;
+            healthbar.value = PlayerHealth;
+            _animator.SetBool(_animIDDeath, false);
+        }
         private bool IsCurrentDeviceMouse
         {
             get
@@ -249,12 +283,15 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
-            JumpAndGravity();
-            GroundedCheck();
-            Move();
-            Interact();
-            OpenInventory();
-            UseItem();
+            if (isAlive)
+            {
+                JumpAndGravity();
+                GroundedCheck();
+                Move();
+                Interact();
+                OpenInventory();
+                UseItem();
+            }
         }
 
         private void LateUpdate()
@@ -273,6 +310,7 @@ namespace StarterAssets
             _animIDFishingIdle = Animator.StringToHash("RodEquipt");
             _animIDSwordIdle = Animator.StringToHash("SwordEquipt");
             _animIDSwordSwing = Animator.StringToHash("SwordAttack");
+            _animIDDeath = Animator.StringToHash("isDead");
     }
 
         private void GroundedCheck()
@@ -615,22 +653,7 @@ namespace StarterAssets
         {
             ReadyToCast = false;
             _animator.SetBool(_animIDCast, true);
-            currentBobber = Instantiate(castBauble, CastPoint.position, Quaternion.identity);
-            Rigidbody rb = currentBobber.GetComponent<Rigidbody>();
-
-            Ray raycast = new Ray(_mainCamera.transform.position, _mainCamera.transform.forward);
-            if (Physics.Raycast(raycast, out RaycastHit hit, 500f, layerMask))
-            {
-                Vector3 forceDir = (hit.point - CastPoint.position).normalized;
-
-                Vector3 AppliedForce = forceDir * castSpeed + transform.up * 5f;
-                rb.AddForce(AppliedForce, ForceMode.Impulse);
-            }
-            else
-            {
-                rb.AddForce(transform.forward * castSpeed + transform.up * 5f, ForceMode.Impulse);
-            }
-            _input.useItem = false;
+            StartCoroutine(DelayedCast(2.5f));
         }
 
         private void reelIn()
@@ -697,10 +720,9 @@ namespace StarterAssets
             healthbar.value = PlayerHealth;
             if (PlayerHealth <= 0)
             {
-                Debug.Log("Player Dead");
-                PlayerHealth = FullHealth;
-                healthbar.value = PlayerHealth;
-                transform.position = SpawnPoint.position;
+                isAlive = false;
+                _animator.SetBool(_animIDDeath, true);
+                
                 if (InventoryManager.Instance.HasQuestItem(Items.ItemType.CombatQuest))
                 {
                     foreach (Items item in InventoryManager.Instance.items)
@@ -711,6 +733,7 @@ namespace StarterAssets
                         }
                     }
                 }
+                StartCoroutine(DelayAD(8));
 
             }
         }

@@ -21,4 +21,14 @@ public class CustomEvents
             onSkeletonKilled();
         }
     }
+
+    public event Action onDance;
+
+    public void Dance()
+    {
+        if (onDance != null)
+        {
+            onDance();
+        }
+    }
 }
