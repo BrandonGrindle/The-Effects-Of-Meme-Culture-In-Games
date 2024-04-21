@@ -8,6 +8,7 @@ public abstract class QuestStep : MonoBehaviour
 
     private string QuestID;
 
+    public abstract string GetDetails();
     public void InitialiseQuestStep(string QuestID)
     {
         this.QuestID = QuestID;

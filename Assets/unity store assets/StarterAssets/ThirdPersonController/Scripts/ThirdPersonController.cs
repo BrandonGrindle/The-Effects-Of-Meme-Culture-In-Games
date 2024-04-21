@@ -2,6 +2,8 @@
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using TMPro;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -160,6 +162,12 @@ namespace StarterAssets
 
         private bool _hasAnimator;
 
+        private Slider healthbar;
+        private TextMeshProUGUI armorRating;
+        private Image HeldItem;
+
+        public Sprite rodSprite;
+        public Sprite swordSprite;
         IEnumerator Cooldown()
         {
             onCooldown = true;
@@ -205,6 +213,16 @@ namespace StarterAssets
 
             SpawnPoint = GameObject.Find("SpawnPoint").transform;
             FullHealth = PlayerHealth;
+
+            healthbar = GameObject.Find("HealthBar").GetComponent<Slider>();
+            healthbar.maxValue = FullHealth;
+            healthbar.value = PlayerHealth;
+
+            armorRating = GameObject.Find("Armor Rating").GetComponentInChildren<TextMeshProUGUI>();
+            armorRating.text = Defense.ToString();
+
+            HeldItem = GameObject.Find("EquiptItem").GetComponent<Image>();
+            HeldItem.sprite = null;
         }
 
         private void Start()
@@ -526,6 +544,14 @@ namespace StarterAssets
                     }
                     FishingRod.SetActive(!FishingRod.activeSelf);
                     _animator.SetBool(_animIDFishingIdle, FishingRod.activeSelf);
+                    if (FishingRod.activeSelf)
+                    {
+                        HeldItem.sprite = rodSprite;
+                    }
+                    else
+                    {
+                        HeldItem.sprite = null;
+                    }
                     break;
                 case 2:
                     if (FishingRod.activeSelf == true)
@@ -535,6 +561,14 @@ namespace StarterAssets
                     }
                     Sword.SetActive(!Sword.activeSelf);
                     _animator.SetBool(_animIDSwordIdle, Sword.activeSelf);
+                    if (Sword.activeSelf)
+                    {
+                        HeldItem.sprite = swordSprite;
+                    }
+                    else
+                    {
+                        HeldItem.sprite = null;
+                    }
                     break;
                 default:
                     Debug.Log("No usable Item");
@@ -660,11 +694,12 @@ namespace StarterAssets
         public void PlayerDamaged(float DMGVal)
         {
             PlayerHealth -= DMGVal / Defense;
-
+            healthbar.value = PlayerHealth;
             if (PlayerHealth <= 0)
             {
                 Debug.Log("Player Dead");
                 PlayerHealth = FullHealth;
+                healthbar.value = PlayerHealth;
                 transform.position = SpawnPoint.position;
                 if (InventoryManager.Instance.HasQuestItem(Items.ItemType.CombatQuest))
                 {

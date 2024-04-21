@@ -6,6 +6,9 @@ using UnityEditor.PackageManager;
 using Unity.VisualScripting;
 using static Items;
 using static UnityEditor.Progress;
+using TMPro;
+using UnityEngine.UI;
+
 
 public class QuestGiver : MonoBehaviour, IInteractable
 {
@@ -13,7 +16,8 @@ public class QuestGiver : MonoBehaviour, IInteractable
     [SerializeField] private QuestInfo CurrentQuest;
 
     [Header("UI QUEST")]
-    [SerializeField] private GameObject QuestUI;
+    private TextMeshProUGUI questInfo;
+    private TextMeshProUGUI progress;
 
     [Header("Quest Item Type")]
     [SerializeField] private Items KeyItem;
@@ -23,10 +27,22 @@ public class QuestGiver : MonoBehaviour, IInteractable
     private QuestState currentQuestState;
 
     private QuestIcons icons;
+
+
     private void Awake()
     {
         QuestID = CurrentQuest.id;
         icons = GetComponentInChildren<QuestIcons>();
+        questInfo = GameObject.Find("Info").GetComponent<TextMeshProUGUI>();
+        progress = GameObject.Find("Progress").GetComponent<TextMeshProUGUI>();
+        foreach(GameObject step in CurrentQuest.steps)
+        {
+            QuestStep currstep = step.GetComponent<QuestStep>();
+            if (currstep != null)
+            {
+                questInfo.text = currstep.GetDetails();
+            }
+        }
     }
 
     private void OnEnable()
@@ -63,11 +79,6 @@ public class QuestGiver : MonoBehaviour, IInteractable
         }
     }
 
-    public void UIupdate()
-    {
-        //implement a ui update for fish submitted
-    }
-
     public void Interact()
     {
         //Debug.Log("Hello");
@@ -81,13 +92,14 @@ public class QuestGiver : MonoBehaviour, IInteractable
         }
         else if (currentQuestState.Equals(QuestState.COMPLETE))
         {
+            questInfo.text = string.Empty;
+            progress.text = string.Empty;
             EventManager.Instance.questEvents.QuestComplete(QuestID);
             ItemSubmissionCheck();
         }
         else
         {
             ItemSubmissionCheck();
-            UIupdate();
         }
 
 
