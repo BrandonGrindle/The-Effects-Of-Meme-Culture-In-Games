@@ -28,7 +28,9 @@ public class QuestGiver : MonoBehaviour, IInteractable
 
     private QuestIcons icons;
 
-
+    public AudioSource source;
+    public AudioClip[] greetings;
+    public AudioClip[] completion;
     private void Awake()
     {
         QuestID = CurrentQuest.id;
@@ -89,6 +91,14 @@ public class QuestGiver : MonoBehaviour, IInteractable
                         questInfo.text = currstep.GetDetails();
                     }
                 }
+
+                if (greetings.Length > 0)
+                {
+                    var index = Random.Range(0, greetings.Length);
+                    source.clip = greetings[index];
+                    source.volume = 1.0f; // Adjust this value as needed
+                    source.Play();
+                }
             }
             EventManager.Instance.questEvents.StartQuest(QuestID);
         }
@@ -96,6 +106,13 @@ public class QuestGiver : MonoBehaviour, IInteractable
         {
             questInfo.text = string.Empty;
             progress.text = string.Empty;
+            if (completion.Length > 0)
+            {
+                var index = Random.Range(0, completion.Length);
+                source.clip = completion[index];
+                source.volume = 1.0f; // Adjust this value as needed
+                source.Play();
+            }
             EventManager.Instance.questEvents.QuestComplete(QuestID);
             ItemSubmissionCheck();
         }

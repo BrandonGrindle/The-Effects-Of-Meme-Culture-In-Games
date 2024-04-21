@@ -1,4 +1,5 @@
 using StarterAssets;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -34,6 +35,13 @@ public class EnemyAI : MonoBehaviour
     private int _animIDrun;
     private int _animIDDance;
 
+    public AudioClip[] Cursed;
+    public AudioSource Playpoint;
+
+    public AudioSource source;
+    public AudioClip Attacking;
+    public AudioClip hurt;
+    public AudioClip Death;
     IEnumerator DelayedDestruction(float delay)
     {
         yield return new WaitForSeconds(delay); // Wait for 6 seconds
@@ -102,11 +110,17 @@ public class EnemyAI : MonoBehaviour
     {
         health -= (damage / defense);
         animator.SetBool(_animIDDamaged, true);
+        source.clip = hurt;
+        Playpoint.volume = 1.0f; // Adjust this value as needed
+        source.Play();
         if (health <= 0)
         {
             animator.SetBool(_animIDDeath, true);
             EventManager.Instance.cstmevents.SkeletonKilled();
             InventoryManager.Instance.AddItem(ItemDrop);
+            source.clip = Death;
+            source.volume = 1.0f; // Adjust this value as needed
+            source.Play();
             StartCoroutine(DelayedDestruction(6));
         }
         
@@ -143,8 +157,8 @@ public class EnemyAI : MonoBehaviour
 
     private void SearchWalkPoint()
     {
-        float randomZ = Random.Range(-walkrange, walkrange);
-        float randomX = Random.Range(-walkrange, walkrange);
+        float randomZ = UnityEngine.Random.Range(-walkrange, walkrange);
+        float randomX = UnityEngine.Random.Range(-walkrange, walkrange);
         NavMeshHit hit;
 
         Vector3 randomPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
@@ -178,12 +192,24 @@ public class EnemyAI : MonoBehaviour
         {
             ThirdPersonController.instance.PlayerDamaged(Damage);
             animator.SetBool(_animIDAttack, true);
-            
+            source.clip = Attacking;
+            source.volume = 1.0f; // Adjust this value as needed
+            source.Play();
+
             //Invoke(nameof(ResetAttack), attackDelay);
         }
     }
     private void Dance()
     {
+        if (Cursed.Length > 0)
+        {
+            var index = UnityEngine.Random.Range(0, Cursed.Length);
+            Playpoint.enabled = true;
+            Playpoint.clip = Cursed[index];
+            Playpoint.volume = 1.0f; // Adjust this value as needed
+            Playpoint.Play();
+            Debug.Log("playing cursed");
+        }
         animator.SetBool(_animIDDance, true);
     }
 

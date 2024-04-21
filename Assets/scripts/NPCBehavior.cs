@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using StarterAssets;
 using UnityEngine.AI;
+using UnityEngine.InputSystem.XR;
 
 public class NPCBehavior : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class NPCBehavior : MonoBehaviour
 
     private List<Rigidbody> RagdollArtefact = new List<Rigidbody>();
 
+    public AudioSource source;
+    public AudioClip[] caughtsfx;
     private void Awake()
     {
 
@@ -48,6 +51,13 @@ public class NPCBehavior : MonoBehaviour
     {
         captured = true;
         SetRagdollState(true);
+        if (caughtsfx.Length > 0)
+        {
+            var index = Random.Range(0, caughtsfx.Length);
+            source.clip = caughtsfx[index];
+            source.volume = 1.0f; // Adjust this value as needed
+            source.Play();
+        }
         //animator.enabled = false;
 
     }

@@ -171,6 +171,13 @@ namespace StarterAssets
         public Sprite swordSprite;
 
         private bool isAlive = true;
+
+        public AudioClip swordequip;
+        public AudioClip fishingRodEQ;
+        public AudioClip painGrunt;
+        public AudioClip deathgrunt;
+        public AudioClip Castflip;
+        public AudioClip swordswing;
         IEnumerator Cooldown()
         {
             onCooldown = true;
@@ -220,6 +227,7 @@ namespace StarterAssets
             isAlive = true;
             PlayerHealth = FullHealth;
             healthbar.value = PlayerHealth;
+
             _animator.SetBool(_animIDDeath, false);
         }
         private bool IsCurrentDeviceMouse
@@ -548,6 +556,7 @@ namespace StarterAssets
         {
             if (_input.Inventory)
             {
+                AudioSource.PlayClipAtPoint(fishingRodEQ,_controller.center);
                 InventoryUI.SetActive(!InventoryUI.activeSelf);
                 Cursor.visible = InventoryUI.activeSelf;
                 if (InventoryUI.activeSelf == true)
@@ -580,6 +589,7 @@ namespace StarterAssets
                         Sword.SetActive(false);
                         _animator.SetBool(_animIDSwordIdle, false);
                     }
+                    AudioSource.PlayClipAtPoint(fishingRodEQ, _controller.center, 1.3f);
                     FishingRod.SetActive(!FishingRod.activeSelf);
                     _animator.SetBool(_animIDFishingIdle, FishingRod.activeSelf);
                     if (FishingRod.activeSelf)
@@ -597,6 +607,7 @@ namespace StarterAssets
                         FishingRod.SetActive(false);
                         _animator.SetBool(_animIDFishingIdle, false);
                     }
+                    AudioSource.PlayClipAtPoint(swordequip, _controller.center,1.6f);
                     Sword.SetActive(!Sword.activeSelf);
                     _animator.SetBool(_animIDSwordIdle, Sword.activeSelf);
                     if (Sword.activeSelf)
@@ -638,6 +649,7 @@ namespace StarterAssets
                     case 2:
                         if (WeaponController.instance.canAttack)
                         {
+                            AudioSource.PlayClipAtPoint(swordswing, _controller.center, 1.6f);
                             WeaponController.instance.Attack(_animator, _animIDSwordSwing);
                         }
                         break;
@@ -653,6 +665,7 @@ namespace StarterAssets
         {
             ReadyToCast = false;
             _animator.SetBool(_animIDCast, true);
+            AudioSource.PlayClipAtPoint(Castflip, _controller.center,1.6f);
             StartCoroutine(DelayedCast(2.1f));
         }
 
@@ -718,11 +731,13 @@ namespace StarterAssets
         {
             PlayerHealth -= DMGVal / Defense;
             healthbar.value = PlayerHealth;
+            AudioSource.PlayClipAtPoint(painGrunt, _controller.center,1.7f);
             if (PlayerHealth <= 0)
             {
                 isAlive = false;
                 _animator.SetBool(_animIDDeath, true);
-                
+                AudioSource.PlayClipAtPoint(deathgrunt, _controller.center,1.8f);
+
                 if (InventoryManager.Instance.HasQuestItem(Items.ItemType.CombatQuest))
                 {
                     foreach (Items item in InventoryManager.Instance.items)
