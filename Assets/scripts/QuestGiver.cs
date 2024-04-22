@@ -31,6 +31,12 @@ public class QuestGiver : MonoBehaviour, IInteractable
     public AudioSource source;
     public AudioClip[] greetings;
     public AudioClip[] completion;
+
+    private GameObject Panel;
+    private TextMeshProUGUI dialogue;
+    public string text;
+
+    public int UIpopuptime = 5;
     private void Awake()
     {
         QuestID = CurrentQuest.id;
@@ -38,6 +44,11 @@ public class QuestGiver : MonoBehaviour, IInteractable
         questInfo = GameObject.Find("Info").GetComponent<TextMeshProUGUI>();
         progress = GameObject.Find("Progress").GetComponent<TextMeshProUGUI>();
         questInfo.text = string.Empty; progress.text = string.Empty;
+
+        dialogue = GameObject.Find("Dialogue").GetComponent<TextMeshProUGUI>();
+        dialogue.text = string.Empty;
+
+        Panel = GameObject.Find("SpeechBox");
     }
 
     private void OnEnable()
@@ -47,6 +58,17 @@ public class QuestGiver : MonoBehaviour, IInteractable
     private void OnDisable()
     {
         EventManager.Instance.questEvents.onQuestStateChange -= QuestStateChange;
+    }
+
+    public IEnumerator Uidelay()
+    {
+        Debug.Log("delay Started");
+        dialogue.text = text;
+        Panel.SetActive(true);
+        yield return new WaitForSeconds(UIpopuptime);
+        dialogue.text = string.Empty;
+        Panel.SetActive(false);
+        Debug.Log("delay finished");
     }
 
     private void QuestStateChange(Quests quests)
@@ -100,6 +122,7 @@ public class QuestGiver : MonoBehaviour, IInteractable
                     source.Play();
                 }
             }
+            StartCoroutine(Uidelay());
             EventManager.Instance.questEvents.StartQuest(QuestID);
         }
         else if (currentQuestState.Equals(QuestState.COMPLETE))

@@ -171,6 +171,7 @@ namespace StarterAssets
         public Sprite swordSprite;
 
         private bool isAlive = true;
+        private bool reelActive = false;
 
         public AudioClip swordequip;
         public AudioClip fishingRodEQ;
@@ -178,7 +179,7 @@ namespace StarterAssets
         public AudioClip deathgrunt;
         public AudioClip Castflip;
         public AudioClip swordswing;
-        public AudioClip reelit;
+        public AudioClip[] reelit;
         IEnumerator Cooldown()
         {
             onCooldown = true;
@@ -665,6 +666,7 @@ namespace StarterAssets
         public void CastBobber()
         {
             ReadyToCast = false;
+            reelActive = true;
             _animator.SetBool(_animIDCast, true);
             AudioSource.PlayClipAtPoint(Castflip, _controller.center,1.6f);
             StartCoroutine(DelayedCast(2.1f));
@@ -675,7 +677,12 @@ namespace StarterAssets
             if (currentBobber != null)
             {
                 if (!returning) { BobberReturnRoutine = StartCoroutine(BobberReturn()); }
-                AudioSource.PlayClipAtPoint(Castflip, _controller.center, 1);
+                if(reelit.Length > 0 && reelActive)
+                {
+                    int index = Random.Range(0, reelit.Length);
+                    AudioSource.PlayClipAtPoint(reelit[index], _controller.center);
+                    reelActive=false;
+                }
                 Vector3 ReelLoc = (interactSource.position - currentBobber.transform.position).normalized;
                 float reelSpeed = 5f;
                 Rigidbody rb = currentBobber.GetComponent<Rigidbody>();

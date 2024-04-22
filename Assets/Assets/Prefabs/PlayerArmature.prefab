@@ -2479,6 +2479,16 @@ MonoBehaviour:
   onCooldown: 0
   rodSprite: {fileID: 0}
   swordSprite: {fileID: 0}
+  swordequip: {fileID: 0}
+  fishingRodEQ: {fileID: 0}
+  painGrunt: {fileID: 0}
+  deathgrunt: {fileID: 0}
+  Castflip: {fileID: 0}
+  swordswing: {fileID: 0}
+  reelit:
+  - {fileID: 8300000, guid: 6baaca1400044bc4198c4803fd91934b, type: 3}
+  - {fileID: 8300000, guid: b63652ed7d5cf254eacd49272df3f3f5, type: 3}
+  - {fileID: 8300000, guid: 72dd82e5c038d3b4ea9eb19330d5f623, type: 3}
 --- !u!114 &5262308036107294737
 MonoBehaviour:
   m_ObjectHideFlags: 0
