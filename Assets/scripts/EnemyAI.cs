@@ -26,6 +26,8 @@ public class EnemyAI : MonoBehaviour
     private float attackDelay;
     bool alreadyAttacked;
 
+    [SerializeField] private float WaitTimeMin, WaitTimeMax;
+
     [SerializeField] private Items ItemDrop;
 
     private Animator animator;
@@ -46,6 +48,14 @@ public class EnemyAI : MonoBehaviour
     {
         yield return new WaitForSeconds(delay); // Wait for 6 seconds
         Destroy(this.gameObject); // Destroy the game object
+    }
+
+    IEnumerator WaitAtPoint()
+    {
+        yield return new WaitForSeconds(UnityEngine.Random.Range(WaitTimeMin, WaitTimeMax));
+        walkpointSet = false;
+        agent.isStopped = false;
+
     }
 
     private void OnEnable()
@@ -143,7 +153,7 @@ public class EnemyAI : MonoBehaviour
             }
             else if (disttoWP.magnitude < 1f)
             {
-                walkpointSet = false;
+                WaitAtPoint();
             }
             //Debug.Log("setting run velocity");
             animator.SetFloat(_animIDrun, agent.velocity.magnitude);

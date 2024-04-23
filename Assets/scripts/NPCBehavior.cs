@@ -24,6 +24,18 @@ public class NPCBehavior : MonoBehaviour
 
     public AudioSource source;
     public AudioClip[] caughtsfx;
+    public AudioClip[] genericResponce;
+
+    [SerializeField] private int SpeechIntervalMin, SpeechIntervalMax;
+
+    bool playingAudio = false;
+
+    IEnumerator randomVoiceRange()
+    {
+        yield return new WaitForSeconds(Random.Range(SpeechIntervalMin, SpeechIntervalMax));
+        playRandAudio();
+        playingAudio = false;
+    }
     private void Awake()
     {
 
@@ -39,6 +51,11 @@ public class NPCBehavior : MonoBehaviour
     private void Update()
     {
         patrol();
+        if (!playingAudio)
+        {
+            playingAudio = true;
+            StartCoroutine(randomVoiceRange());
+        }
     }
 
     public void pickupItem()
@@ -55,7 +72,7 @@ public class NPCBehavior : MonoBehaviour
         {
             var index = Random.Range(0, caughtsfx.Length);
             source.clip = caughtsfx[index];
-            source.volume = 1.0f; // Adjust this value as needed
+            source.volume = 1.0f;
             source.Play();
         }
         //animator.enabled = false;
@@ -93,9 +110,7 @@ public class NPCBehavior : MonoBehaviour
     {
         float randomZ = Random.Range(-walkrange, walkrange);
         float randomX = Random.Range(-walkrange, walkrange);
-        NavMeshHit hit; // Used to store the information returned from SamplePosition
-
-        // Try multiple times to find a valid walk point
+        NavMeshHit hit; 
         int attempts = 10;
         while (attempts > 0)
         {
@@ -103,16 +118,14 @@ public class NPCBehavior : MonoBehaviour
             randomX = Random.Range(-walkrange, walkrange);
 
             Vector3 randomPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
-
-            // Check if the randomPoint is within the navmesh and find the closest point on the NavMesh to randomPoint
             if (NavMesh.SamplePosition(randomPoint, out hit, walkrange, NavMesh.AllAreas))
             {
-                walkPoint = hit.position; // Use the position hit by SamplePosition which is on the NavMesh
+                walkPoint = hit.position; 
                 walkpointSet = true;
-                return; // Exit the function if a valid point is found
+                return; 
             }
 
-            attempts--; // Decrement the number of attempts left
+            attempts--; 
         }
     }
 
@@ -120,14 +133,23 @@ public class NPCBehavior : MonoBehaviour
     {
         foreach (var rb in RagdollArtefact)
         {
-            rb.isKinematic = !state; // If ragdoll is on, isKinematic is off, and vice versa
+            rb.isKinematic = !state;
         }
 
-        // Toggle the animator and agent according to the state
         if (animator != null) animator.enabled = !state;
         if (agent != null) agent.enabled = !state;
 
-        // If the NPC has a parent Rigidbody, you may want to toggle isKinematic on that, too
         if (GetComponent<Rigidbody>() != null) GetComponent<Rigidbody>().isKinematic = !state;
+    }
+
+    private void playRandAudio()
+    {
+        if (genericResponce.Length > 0)
+        {
+            int index = Random.Range(0, genericResponce.Length);
+            source.clip = genericResponce[index];
+            source.volume = .4f;
+            source.Play();
+        }
     }
 }

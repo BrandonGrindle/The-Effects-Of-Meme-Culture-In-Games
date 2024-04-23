@@ -298,7 +298,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1365835223797637927}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 24aca45e47a3e30478d855c456665c30, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -322,7 +322,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1365835223797637927}
   serializedVersion: 4
-  m_Mass: 1.25
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -508,6 +508,19 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e8a9966884d4d6c45bdf41668cb2e469, type: 3}
   - {fileID: 8300000, guid: 9cf29ced8bbf3c84caba8aa3908e4918, type: 3}
   - {fileID: 8300000, guid: 7c930568eff0b2544aac1b31ee4adc09, type: 3}
+  genericResponce:
+  - {fileID: 8300000, guid: 170dc8da4c703a74bbd06be5365f64af, type: 3}
+  - {fileID: 8300000, guid: 9ead92c8d67a4d14a950206d00e54367, type: 3}
+  - {fileID: 8300000, guid: 8062c35f39b7f464b92926a07baa06a2, type: 3}
+  - {fileID: 8300000, guid: b84ff1abb11bcd0419a8ba6417b39962, type: 3}
+  - {fileID: 8300000, guid: 696ffe91f1d93ba4fb4bb1a402727dc3, type: 3}
+  - {fileID: 8300000, guid: be3cb22e7a3f965478342f536fe7836d, type: 3}
+  - {fileID: 8300000, guid: 5052d845ff543f046a10067b6391ba12, type: 3}
+  - {fileID: 8300000, guid: 94d05be946fd20346ad436306dc58421, type: 3}
+  - {fileID: 8300000, guid: b34f44b4b1a77824aa79c677553eabd5, type: 3}
+  - {fileID: 8300000, guid: f13f80141cbb626449eea4f88e459d70, type: 3}
+  SpeechIntervalMin: 0
+  SpeechIntervalMax: 15
 --- !u!114 &7956832008929505024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -599,7 +612,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -713,7 +726,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2300856729633111915}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 24aca45e47a3e30478d855c456665c30, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -735,7 +748,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2300856729633111915}
   serializedVersion: 4
-  m_Mass: 3.125
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -923,7 +936,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2748924480626865194}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 24aca45e47a3e30478d855c456665c30, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -947,7 +960,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2748924480626865194}
   serializedVersion: 4
-  m_Mass: 1.25
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -1539,7 +1552,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4230780716133999457}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 24aca45e47a3e30478d855c456665c30, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1563,7 +1576,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4230780716133999457}
   serializedVersion: 4
-  m_Mass: 1.875
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -1702,7 +1715,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4282446480899697484}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 24aca45e47a3e30478d855c456665c30, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1726,7 +1739,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4282446480899697484}
   serializedVersion: 4
-  m_Mass: 1.875
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -2039,7 +2052,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5026456292021687786}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 24aca45e47a3e30478d855c456665c30, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2063,7 +2076,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5026456292021687786}
   serializedVersion: 4
-  m_Mass: 1.875
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -2264,7 +2277,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5995535322258443305}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 24aca45e47a3e30478d855c456665c30, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2288,7 +2301,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5995535322258443305}
   serializedVersion: 4
-  m_Mass: 1.875
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -2491,7 +2504,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6790985203995320252}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 24aca45e47a3e30478d855c456665c30, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2513,7 +2526,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6790985203995320252}
   serializedVersion: 4
-  m_Mass: 3.125
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -2716,7 +2729,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7688825217066276066}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 24aca45e47a3e30478d855c456665c30, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2740,7 +2753,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7688825217066276066}
   serializedVersion: 4
-  m_Mass: 1.25
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -2847,7 +2860,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7718120411855560350}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 24aca45e47a3e30478d855c456665c30, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2871,7 +2884,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7718120411855560350}
   serializedVersion: 4
-  m_Mass: 1.25
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -3170,7 +3183,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8623284986461200901}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 24aca45e47a3e30478d855c456665c30, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -3192,7 +3205,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8623284986461200901}
   serializedVersion: 4
-  m_Mass: 1.25
+  m_Mass: 0.01
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
