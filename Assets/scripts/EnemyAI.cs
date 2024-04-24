@@ -44,6 +44,8 @@ public class EnemyAI : MonoBehaviour
     public AudioClip Attacking;
     public AudioClip hurt;
     public AudioClip Death;
+
+    bool isDead = false;
     IEnumerator DelayedDestruction(float delay)
     {
         yield return new WaitForSeconds(delay); // Wait for 6 seconds
@@ -98,13 +100,14 @@ public class EnemyAI : MonoBehaviour
     private void Update()
     {
         bool isDancing = animator.GetBool(_animIDDance);
-        if (!isDancing)
+        if (!isDancing && !isDead)
         {
             agent.isStopped = false;
 
             InSightRange = Physics.CheckSphere(transform.position, SightRange, WhatIsPlayer);
             InAttackRange = Physics.CheckSphere(transform.position, AttackRange, WhatIsPlayer);
 
+            
             if (!InSightRange && !InAttackRange) { patrol(); }
             if (InSightRange && !InAttackRange) { chase(); }
             if (InSightRange && InAttackRange) { Attack(); }
@@ -125,6 +128,7 @@ public class EnemyAI : MonoBehaviour
         source.Play();
         if (health <= 0)
         {
+            isDead = true;
             animator.SetBool(_animIDDeath, true);
             EventManager.Instance.cstmevents.SkeletonKilled();
             InventoryManager.Instance.AddItem(ItemDrop);
