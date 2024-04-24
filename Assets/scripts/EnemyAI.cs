@@ -103,7 +103,7 @@ public class EnemyAI : MonoBehaviour
         if (!isDancing && !isDead)
         {
             agent.isStopped = false;
-
+            //Debug.Log("im working");
             InSightRange = Physics.CheckSphere(transform.position, SightRange, WhatIsPlayer);
             InAttackRange = Physics.CheckSphere(transform.position, AttackRange, WhatIsPlayer);
 
@@ -157,7 +157,8 @@ public class EnemyAI : MonoBehaviour
             }
             else if (disttoWP.magnitude < 1f)
             {
-                WaitAtPoint();
+                //Debug.Log("dest reached");
+                StartCoroutine(WaitAtPoint());
             }
             //Debug.Log("setting run velocity");
             animator.SetFloat(_animIDrun, agent.velocity.magnitude);

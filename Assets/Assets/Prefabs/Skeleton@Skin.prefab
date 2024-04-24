@@ -1053,8 +1053,8 @@ MonoBehaviour:
   AttackRange: 1
   InAttackRange: 0
   InSightRange: 0
-  WaitTimeMin: 0
-  WaitTimeMax: 0
+  WaitTimeMin: 1
+  WaitTimeMax: 3
   ItemDrop: {fileID: 11400000, guid: 1ce4b9dc44a13af489b04c2072497ada, type: 2}
   Cursed:
   - {fileID: 8300000, guid: d8efc8cd65d7bc64e9f495d5d4b9ec44, type: 3}
