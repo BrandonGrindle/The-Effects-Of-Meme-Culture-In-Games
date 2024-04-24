@@ -70,9 +70,9 @@
                 },
                 {
                     "name": "CloseApp",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "3f195a1e-b646-4024-9fce-173928434596",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false

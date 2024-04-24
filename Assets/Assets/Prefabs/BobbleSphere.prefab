@@ -96,7 +96,7 @@ Rigidbody:
   m_GameObject: {fileID: 3380900837214725614}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0.1
+  m_Drag: 1
   m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -129,6 +129,7 @@ MonoBehaviour:
   CaughtNCPS: []
   NPCControl: {fileID: 0}
   FishingSpot: {fileID: 0}
+  joint: {fileID: 0}
 --- !u!135 &6626644495919703363
 SphereCollider:
   m_ObjectHideFlags: 0

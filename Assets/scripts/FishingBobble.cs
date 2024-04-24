@@ -8,6 +8,7 @@ public class FishingBobble : MonoBehaviour
     public List<NPCBehavior> CaughtNCPS = new List<NPCBehavior>();
     public NPCBehavior NPCControl = null;
     public FishPoint FishingSpot = null;
+    public FixedJoint joint = null;
 
     public void Update()
     {
@@ -24,12 +25,13 @@ public class FishingBobble : MonoBehaviour
             {
                 CaughtNCPS.Add(NPCControl);
                 NPCControl.Captured();
-                FixedJoint joint = gameObject.AddComponent<FixedJoint>();
+                joint = gameObject.AddComponent<FixedJoint>();
                 joint.connectedBody = other.GetComponent<Rigidbody>();
                 joint.enableCollision = false;
                 joint.autoConfigureConnectedAnchor = false;
                 joint.anchor = Vector3.zero;
                 joint.connectedAnchor = other.attachedRigidbody.transform.InverseTransformPoint(other.transform.position);
+
             }
         }
         else if (other.CompareTag("FishPoint"))

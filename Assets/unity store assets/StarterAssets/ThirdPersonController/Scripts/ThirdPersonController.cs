@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using TMPro;
-#if ENABLE_INPUT_SYSTEM 
+#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 #endif
@@ -224,6 +224,10 @@ namespace StarterAssets
             }
             _input.useItem = false;
 
+            yield return new WaitForSeconds(2);
+            Debug.Log("anim delay ended");
+            _animator.SetBool(_animIDCast, false);
+
         }
 
         IEnumerator DelayAD(float delay)
@@ -284,6 +288,7 @@ namespace StarterAssets
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
             _hasAnimator = TryGetComponent(out _animator);
+            _animator.SetLayerWeight(1, 0f);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
 #if ENABLE_INPUT_SYSTEM 
@@ -311,6 +316,7 @@ namespace StarterAssets
                 Interact();
                 OpenInventory();
                 UseItem();
+                CloseApp();
             }
         }
 
@@ -607,10 +613,12 @@ namespace StarterAssets
                     if (FishingRod.activeSelf)
                     {
                         HeldItem.sprite = rodSprite;
+                        _animator.SetLayerWeight(1, 1f);
                     }
                     else
                     {
                         HeldItem.sprite = null;
+                        _animator.SetLayerWeight(1, 0f);
                     }
                     break;
                 case 2:
@@ -625,10 +633,12 @@ namespace StarterAssets
                     if (Sword.activeSelf)
                     {
                         HeldItem.sprite = swordSprite;
+                        _animator.SetLayerWeight(1, 1f);
                     }
                     else
                     {
                         HeldItem.sprite = null;
+                        _animator.SetLayerWeight(1, 0f);
                     }
                     break;
                 default:
@@ -702,8 +712,12 @@ namespace StarterAssets
                 float reelSpeed = Mathf.Lerp(1f, 3f, Vector3.Distance(currentBobber.transform.position, interactSource.position));
                 Rigidbody rb = currentBobber.GetComponent<Rigidbody>();
                 FishingBobble FishingScript = currentBobber.GetComponent<FishingBobble>();
-
                 Vector3 AppliedForce = ReelLoc * reelSpeed;
+                if (FishingScript.joint != null) 
+                {
+                    Rigidbody ConnectedActor = FishingScript.joint.connectedBody;
+                    ConnectedActor.AddForce(AppliedForce, ForceMode.Impulse);
+                }
                 rb.AddForce(AppliedForce, ForceMode.Impulse);
 
                 if (FishingScript.FishingSpot != null && FishingScript.FishingSpot.catchDetected)
@@ -778,7 +792,7 @@ namespace StarterAssets
 
         public void CloseApp()
         {
-            if(_input.close) { Application.Quit();  }
+            if(_input.close) { Debug.Log("app quit");  Application.Quit();  }
         }
     }
 }
