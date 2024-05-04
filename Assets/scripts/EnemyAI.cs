@@ -103,7 +103,7 @@ public class EnemyAI : MonoBehaviour
         if (!isDancing && !isDead)
         {
             agent.isStopped = false;
-            //Debug.Log("im working");
+            //the code employed for 
             InSightRange = Physics.CheckSphere(transform.position, SightRange, WhatIsPlayer);
             InAttackRange = Physics.CheckSphere(transform.position, AttackRange, WhatIsPlayer);
 
