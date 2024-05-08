@@ -110,7 +110,7 @@ public class EnemyAI : MonoBehaviour
             
             if (!InSightRange && !InAttackRange) { patrol(); }
             if (InSightRange && !InAttackRange) { chase(); }
-            if (InSightRange && InAttackRange) { Attack(); }
+            if (InSightRange && InAttackRange) { StartCoroutine(Attack()); }
         }
         else
         {
@@ -126,7 +126,7 @@ public class EnemyAI : MonoBehaviour
         source.clip = hurt;
         Playpoint.volume = 1.0f; // Adjust this value as needed
         source.Play();
-        if (health <= 0)
+        if (health <= 0 && !isDead)
         {
             isDead = true;
             animator.SetBool(_animIDDeath, true);
@@ -197,7 +197,7 @@ public class EnemyAI : MonoBehaviour
         transform.LookAt(player);
     }
 
-    private void Attack()
+    private IEnumerator Attack()
     {
         agent.SetDestination(transform.position);
         animator.SetFloat(_animIDrun, agent.velocity.magnitude);
@@ -205,12 +205,13 @@ public class EnemyAI : MonoBehaviour
         alreadyAttacked = animator.GetBool(_animIDAttack);
         if (!alreadyAttacked)
         {
-            ThirdPersonController.instance.PlayerDamaged(Damage);
             animator.SetBool(_animIDAttack, true);
             source.clip = Attacking;
             source.volume = 1.0f; // Adjust this value as needed
             source.Play();
 
+            yield return new WaitForSeconds(1);
+            ThirdPersonController.instance.PlayerDamaged(Damage);
             //Invoke(nameof(ResetAttack), attackDelay);
         }
     }
