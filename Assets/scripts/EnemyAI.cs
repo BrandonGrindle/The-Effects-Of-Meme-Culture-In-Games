@@ -206,12 +206,12 @@ public class EnemyAI : MonoBehaviour
         if (!alreadyAttacked)
         {
             animator.SetBool(_animIDAttack, true);
-            source.clip = Attacking;
-            source.volume = 1.0f; // Adjust this value as needed
-            source.Play();
 
             yield return new WaitForSeconds(1);
             ThirdPersonController.instance.PlayerDamaged(Damage);
+            source.clip = Attacking;
+            source.volume = 1.0f; // Adjust this value as needed
+            source.Play();
             //Invoke(nameof(ResetAttack), attackDelay);
         }
     }
